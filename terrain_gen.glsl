@@ -1,3 +1,5 @@
+// Use the EvaluateFBM function to get the noise value at a point in 2D space
+
 const mat2 myt = mat2(.12121212, .13131313, -.13131313, .12121212);
 const vec2 mys = vec2(1e4, 1e6);
 
