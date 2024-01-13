@@ -102,3 +102,28 @@ float snoise(vec3 v){
   return ((42.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1),
                                 dot(p2,x2), dot(p3,x3) ) )) + 1) / 2.;
 }
+
+float EvaluateFBM(float xin, float yin,
+                  int octaveCount) {
+    float x = size - xin;
+    float y = yin;
+    float frequency = 1/pow(2.2, float(octaveCount));
+    float amplitude = 1.;
+    float persistence = 0.5;
+    float lacunarity = 2.;
+
+    float value = 0;
+
+    for (int i = 0; i < octaveCount; i++) {
+        value += amplitude * snoise(vec3(x * frequency, y * frequency, float(seed)));
+        amplitude *= persistence;
+        frequency *= lacunarity;
+    }
+
+    value = floor(value * 1000) / 1000;
+
+    float voronoi = voronoi2d(vec2(x / 1600, y / 1600));
+    voronoi = smoothstep(0.001, 1., voronoi);
+    value *= voronoi;
+    return value * cutoff(vec2(x, y)) * snoise(vec3(x / pow(2., 12.), y / pow(2., 12.), seed));
+}
